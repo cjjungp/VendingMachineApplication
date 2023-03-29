@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://git.techelevator.com/campuses/nlr/mar-2023/java-green/student-pairs/module-1-capstone/module-1-capstone-main.git
+git remote add origin https://git.techelevator.com/campuses/nlr/mar-2023/java-blue/student-pairs/module-1-capstone.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://git.techelevator.com/campuses/nlr/mar-2023/java-green/student-pairs/module-1-capstone/module-1-capstone-main/-/settings/integrations)
+- [ ] [Set up project integrations](https://git.techelevator.com/campuses/nlr/mar-2023/java-blue/student-pairs/module-1-capstone/-/settings/integrations)
 
 ## Collaborate with your team
 

@@ -29,4 +29,15 @@ public class UserOutput
         System.out.println();
     }
 
+    public static void displayMainMenu(){
+        System.out.println();
+        System.out.println("(D) Display Vending Items");
+        System.out.println("(P) Purchase");
+        System.out.println("(E) Exit");
+    }
+
+    public static void displayPurchaseScreen() {
+        
+    }
+
 }

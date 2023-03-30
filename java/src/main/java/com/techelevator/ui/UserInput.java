@@ -24,18 +24,18 @@ public class UserInput
         System.out.println();
         System.out.print("Please select an option: ");
 
-        String selectedOption = scanner.nextLine();
+        String selectedOption = scanner.nextLine().toLowerCase();
         String option = selectedOption.trim();
 
-        if (option.equals("D"))
+        if (option.equals("d"))
         {
             return "display";
         }
-        else if (option.equals("P"))
+        else if (option.equals("p"))
         {
             return "purchase";
         }
-        else if (option.equals("E"))
+        else if (option.equals("e"))
         {
             return "exit";
         }

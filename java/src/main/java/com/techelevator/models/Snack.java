@@ -2,13 +2,13 @@ package com.techelevator.models;
 
 import java.math.BigDecimal;
 
-public abstract class Snacks {
+public abstract class Snack {
     private String name;
     private BigDecimal price;
     private int stock;
 
 
-    public Snacks(String name, BigDecimal price, int stock) {
+    public Snack(String name, BigDecimal price, int stock) {
         this.name = name;
         this.price = price;
         this.stock = stock;

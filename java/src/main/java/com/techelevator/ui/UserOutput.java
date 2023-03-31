@@ -51,4 +51,15 @@ public class UserOutput
         System.out.println("Current Money Provided: " + (double)balance);
     }
 
+    // Just like the HomeScreen
+    public static void displayPurchaseScreenOpening()
+    {
+        System.out.println();
+        System.out.println("***************************************************");
+        System.out.println("                      Purchase Option");
+        System.out.println("***************************************************");
+        System.out.println();
+    }
+
+
 }

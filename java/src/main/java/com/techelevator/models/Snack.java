@@ -10,15 +10,17 @@ public abstract class Snack {
 
 
     public Snack(String slotID, String name, BigDecimal price, int stock) {
+        this.slotID = slotID;
         this.name = name;
         this.price = price;
         this.stock = stock;
-        this.slotID = slotID;
+
     }
 
     public String getSlotID() {
         return slotID;
     }
+
     public void setSlotID() {
         this.slotID = slotID;
     }

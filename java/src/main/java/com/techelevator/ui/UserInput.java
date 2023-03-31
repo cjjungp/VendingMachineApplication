@@ -12,6 +12,11 @@ import java.util.Scanner;
 public class UserInput
 {
     private static Scanner scanner = new Scanner(System.in);
+    public static double balance = 0.00;
+
+    public double getBalance(){
+        return balance;
+    }
 
     public static String getHomeScreenOption()
     {
@@ -51,15 +56,20 @@ public class UserInput
 
     public static String getDisplayPurchaseOptions() {
 
-        System.out.println("What would you like to purchase?");
+        System.out.println("What would you like to do?");
         System.out.println();
 
         System.out.println("(M) Feed Money");
         System.out.println("(S) Select Item");
         System.out.println("(F) Finish Transaction");
+        System.out.println("(Q) Return to Main Menu");
+
+        System.out.println();
+        System.out.println("Current Money Provided: $" + balance);
 
         System.out.println();
         System.out.print("Please select an option: ");
+
 
         String selectedOption = scanner.nextLine().toLowerCase();
         String option = selectedOption.trim();
@@ -76,9 +86,11 @@ public class UserInput
         {
             return "finish transaction";
         }
+        else if (option.equals("q")) {
+            return "q";
+        }
         else
         {
-
         return null;
     }
     }

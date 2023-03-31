@@ -15,7 +15,7 @@ import java.util.*;
 
 
 public class VendingMachine {
-
+    private Scanner scanner = new Scanner(System.in);
     private UserInput input = new UserInput();
     private UserOutput output = new UserOutput();
     private Audit audit = new Audit("Audit.txt");
@@ -34,31 +34,38 @@ public class VendingMachine {
 
             if (choice.equals("display")) {
                 // Audit Entry started -- need to implement CHOSEN ITEM/ACTION, INPUT BALANCE, FINAL BALANCE
-                audit.write(dateTimeFormatter.format(LocalDateTime.now()));
+                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + "  -User selected Display - ");
                 displayVendingItems();
 
                 // display the vending machine slots
-            } else if (choice.equals("purchase")) {
-                System.out.println("----Purchase option selected----");
-                UserOutput.displayPurchaseScreenOpening();
-                choice = UserInput.getDisplayPurchaseOptions();
+            } if (choice.equals("purchase")) {
 
+                handlePurchaseMenuOptions();
+            }
+            else if(choice.equals("select item")) {
 
-                if (choice.equals("feed money")) {
-                    System.out.println("Please insert money in whole amount ($1, $5, $10, or $20)");
-                    // how do we return to "Purchase" after inserting money?????
+                handleSelectItemScreen();
 
-                } else if (choice.equals("select item")){
-                    System.out.println();
-                    System.out.println("Please select an item to purchase");
+//                } else if (choice.equals("select item")){
+//                    System.out.println();
+//                    System.out.println("Please select an item to purchase");
+//                    displayVendingItems();
+//                    String userSelectedID = scanner.nextLine();
+//
+//                    for (Snack snacks : listOfSnacks) {
+//                        if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase())) {
+//                            System.out.println(snacks.getName());
+//                        }
+//                    }
+//                } else if (choice.equals("finish transaction")){
+//                    System.out.println();
+//                    System.out.println("Thank you. Please don't forget your change if there is any");
+//                }
+//
+//                // make a purchase
+            }
 
-                } else if (choice.equals("finish transaction")){
-                    System.out.println();
-                    System.out.println("Thank you. Please don't forget your change if there is any");
-                }
-
-                // make a purchase
-            } else if (choice.equals("exit")) {
+            if (choice.equals("exit")) {
                 // good bye
                 break;
 
@@ -66,6 +73,53 @@ public class VendingMachine {
             }
         }
     }
+
+    public void handleSelectItemScreen(){
+
+//        boolean stay = true;
+//
+//        do {
+
+
+//        String choice = UserInput.getDisplayPurchaseOptions();
+//            if (choice.equals("select item")) {
+//                displayVendingItems();
+//            }
+
+
+//        }while (stay);
+//
+    }
+
+
+
+    public void handlePurchaseMenuOptions() {
+
+        boolean stay = true;
+
+        do {
+
+//            System.out.println("----Purchase option selected----");
+                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " - User selected Purchase - ");
+//                UserOutput.displayPurchaseScreenOpening();
+                String choice = UserInput.getDisplayPurchaseOptions();
+
+            if (choice.equals("feed money")) {
+                System.out.println("Please insert money in whole amount ($1, $5, $10, or $20)");
+                System.out.println("Current Money Provided: " + UserInput.balance);
+                String moneyAdded = scanner.nextLine();
+                double numMoneyAdded = Double.parseDouble(moneyAdded);
+                UserInput.balance = (UserInput.balance + numMoneyAdded);
+            }
+            if(choice.equals("q")) {
+                stay = false;
+            }
+        } while (stay);
+    }
+
+
+
+
 
     // Might be able to move this to UserOutput Class?? ...
     // ...I have not tried yet since I got it working.

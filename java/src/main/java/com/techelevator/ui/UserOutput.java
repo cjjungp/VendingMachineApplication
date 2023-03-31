@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class UserOutput
 {
-    public static int balance = 0;
+
 //    private Map<String, String> testMap = new HashMap<>();
 
     public static void displayMessage(String message)
@@ -42,14 +42,14 @@ public class UserOutput
         System.out.println("(E) Exit");
     }
 
-    public static void displayPurchaseScreen() {
-        System.out.println();
-        System.out.println("(M) Feed Money");
-        System.out.println("(S) Select Item");
-        System.out.println("(F) Finish Transaction");
-        System.out.println();
-        System.out.println("Current Money Provided: " + (double)balance);
-    }
+//    public static void displayPurchaseScreen() {
+//        System.out.println();
+//        System.out.println("(M) Feed Money");
+//        System.out.println("(S) Select Item");
+//        System.out.println("(F) Finish Transaction");
+//        System.out.println();
+//        System.out.println("Current Money Provided: " + (double)balance);
+//    }
 
     // Just like the HomeScreen
     public static void displayPurchaseScreenOpening()

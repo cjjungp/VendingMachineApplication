@@ -146,24 +146,6 @@ public class VendingMachine {
 
 
 
-    // M
-
-
-
-    // S
-
-
-
-    // F
-
-
-
-
-
-
-
-
-
     public static List readFile() {
 
         List<Snack> listOfSnacks = new ArrayList<>();

@@ -24,7 +24,8 @@ public class VendingMachine {
     // No Items left
     private int NO_LONGER_AVAILABLE = 0;
 
-    private List<Snack> listOfSnacks = new ArrayList<>();
+    private static List<Snack> listOfSnacks = new ArrayList<>();
+    private List<Snack> listOfSnacks1 = new ArrayList<>();
 
 
     public void run() {
@@ -36,18 +37,14 @@ public class VendingMachine {
                 // Audit Entry started -- need to implement CHOSEN ITEM/ACTION, INPUT BALANCE, FINAL BALANCE
                 audit.write(dateTimeFormatter.format(LocalDateTime.now()) + "  -User selected Display - ");
                 displayVendingItems();
-
                 // display the vending machine slots
             } if (choice.equals("purchase")) {
 
                 handlePurchaseMenuOptions();
             }
-
             if (choice.equals("exit")) {
                 // good bye
                 break;
-
-
             }
         }
     }
@@ -73,7 +70,7 @@ public class VendingMachine {
 
                 System.out.println();
                 System.out.println("Please select an item to purchase");
-                displayVendingItems();
+                displayVendingItems1();
                 String userSelectedID = scanner.nextLine();
 
                 for (Snack snacks : listOfSnacks) {
@@ -83,7 +80,6 @@ public class VendingMachine {
 
                         // update stock...
 
-                        
                         int currentStock = snacks.getStock();
                         snacks.setStock(currentStock - 1);
                     }
@@ -107,7 +103,14 @@ public class VendingMachine {
     public void displayVendingItems() {
 
         this.listOfSnacks = readFile();
+        listOfSnacks1 = listOfSnacks;
         System.out.println();
+        for (Snack snacks : listOfSnacks) {
+            System.out.println(snacks.getSlotID() + ": " + snacks.getName() + " - $" + snacks.getPrice() + " - Stock: " + snacks.getStock());
+        }
+    }
+
+    public void displayVendingItems1() {
         for (Snack snacks : listOfSnacks) {
             System.out.println(snacks.getSlotID() + ": " + snacks.getName() + " - $" + snacks.getPrice() + " - Stock: " + snacks.getStock());
         }
@@ -124,9 +127,9 @@ public class VendingMachine {
 
 
 
-    public static List readFile() {
+    public List readFile() {
 
-        List<Snack> listOfSnacks = new ArrayList<>();
+//        List<Snack> listOfSnacks = new ArrayList<>();
         File file = new File("catering.csv");
 
         if (!file.exists()) {
@@ -145,19 +148,19 @@ public class VendingMachine {
                 String typeOfSnack = splitLine[3];
 
                 if (typeOfSnack.equals("Candy")) {
-                    listOfSnacks.add(new Candy(slotIdentifier, nameOfProduct, price, 6));
+                    listOfSnacks.add(new Candy(slotIdentifier, nameOfProduct, price));
                 }
 
                 if (typeOfSnack.equals("Drink")) {
-                    listOfSnacks.add(new Drink(slotIdentifier, nameOfProduct, price, 6));
+                    listOfSnacks.add(new Drink(slotIdentifier, nameOfProduct, price));
                 }
 
                 if (typeOfSnack.equals("Gum")) {
-                    listOfSnacks.add(new Gum(slotIdentifier, nameOfProduct, price, 6));
+                    listOfSnacks.add(new Gum(slotIdentifier, nameOfProduct, price));
                 }
 
                 if (typeOfSnack.equals("Munchy")) {
-                    listOfSnacks.add(new Munchy(slotIdentifier, nameOfProduct, price, 6));
+                    listOfSnacks.add(new Munchy(slotIdentifier, nameOfProduct, price));
                 }
             }
         } catch (FileNotFoundException e) {

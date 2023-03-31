@@ -9,11 +9,11 @@ public abstract class Snack {
     private int stock;
 
 
-    public Snack(String slotID, String name, BigDecimal price, int stock) {
+    public Snack(String slotID, String name, BigDecimal price) {
         this.slotID = slotID;
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.stock = 6;
 
     }
 

@@ -51,12 +51,12 @@ public class VendingMachineTest {
 
         // Arrange
 
-        // Act
-        String expectedResult = Candy(slotIdentifier, nameOfProduct, price, 6));
-        String actualResult = sut.
-
-        // Assert
-        Assert.assertEquals(expectedResult, actualResult);
+//        // Act
+//        String expectedResult = Candy(slotIdentifier, nameOfProduct, price, 6));
+//        String actualResult = sut.
+//
+//        // Assert
+//        Assert.assertEquals(expectedResult, actualResult);
     }
 
 //

@@ -12,9 +12,9 @@ import java.util.Scanner;
 public class UserInput
 {
     private static Scanner scanner = new Scanner(System.in);
-    public static double balance = 0.00;
+    public static BigDecimal balance = BigDecimal.ZERO;
 
-    public double getBalance(){
+    public BigDecimal getBalance(){
         return balance;
     }
 

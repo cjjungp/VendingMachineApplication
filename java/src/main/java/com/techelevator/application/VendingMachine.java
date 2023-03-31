@@ -42,28 +42,6 @@ public class VendingMachine {
 
                 handlePurchaseMenuOptions();
             }
-            else if(choice.equals("select item")) {
-
-                handleSelectItemScreen();
-
-//                } else if (choice.equals("select item")){
-//                    System.out.println();
-//                    System.out.println("Please select an item to purchase");
-//                    displayVendingItems();
-//                    String userSelectedID = scanner.nextLine();
-//
-//                    for (Snack snacks : listOfSnacks) {
-//                        if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase())) {
-//                            System.out.println(snacks.getName());
-//                        }
-//                    }
-//                } else if (choice.equals("finish transaction")){
-//                    System.out.println();
-//                    System.out.println("Thank you. Please don't forget your change if there is any");
-//                }
-//
-//                // make a purchase
-            }
 
             if (choice.equals("exit")) {
                 // good bye
@@ -73,32 +51,11 @@ public class VendingMachine {
             }
         }
     }
-
-    public void handleSelectItemScreen(){
-
-//        boolean stay = true;
-//
-//        do {
-
-
-//        String choice = UserInput.getDisplayPurchaseOptions();
-//            if (choice.equals("select item")) {
-//                displayVendingItems();
-//            }
-
-
-//        }while (stay);
-//
-    }
-
-
-
     public void handlePurchaseMenuOptions() {
 
         boolean stay = true;
 
         do {
-
 //            System.out.println("----Purchase option selected----");
                 audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " - User selected Purchase - ");
 //                UserOutput.displayPurchaseScreenOpening();
@@ -108,9 +65,35 @@ public class VendingMachine {
                 System.out.println("Please insert money in whole amount ($1, $5, $10, or $20)");
                 System.out.println("Current Money Provided: " + UserInput.balance);
                 String moneyAdded = scanner.nextLine();
-                double numMoneyAdded = Double.parseDouble(moneyAdded);
-                UserInput.balance = (UserInput.balance + numMoneyAdded);
+                double num = Double.parseDouble(moneyAdded);
+                BigDecimal numMoneyAdded = BigDecimal.valueOf(num);
+                UserInput.balance = (UserInput.balance.add(numMoneyAdded));
             }
+            if(choice.equals("select item")) {
+
+                System.out.println();
+                System.out.println("Please select an item to purchase");
+                displayVendingItems();
+                String userSelectedID = scanner.nextLine();
+
+                for (Snack snacks : listOfSnacks) {
+                    if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase())) {
+                        System.out.println(snacks.getName());
+                        UserInput.balance = UserInput.balance.subtract(snacks.getPrice());
+
+                        // update stock...
+
+                        
+                        int currentStock = snacks.getStock();
+                        snacks.setStock(currentStock - 1);
+                    }
+                }
+
+            }
+            if (choice.equals("finish transaction")){
+                    System.out.println();
+                    System.out.println("Thank you. Please don't forget your change if there is any");
+                }
             if(choice.equals("q")) {
                 stay = false;
             }
@@ -119,18 +102,13 @@ public class VendingMachine {
 
 
 
-
-
     // Might be able to move this to UserOutput Class?? ...
     // ...I have not tried yet since I got it working.
     public void displayVendingItems() {
 
         this.listOfSnacks = readFile();
-
         System.out.println();
-
         for (Snack snacks : listOfSnacks) {
-
             System.out.println(snacks.getSlotID() + ": " + snacks.getName() + " - $" + snacks.getPrice() + " - Stock: " + snacks.getStock());
         }
     }

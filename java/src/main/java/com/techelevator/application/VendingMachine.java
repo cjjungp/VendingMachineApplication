@@ -100,6 +100,7 @@ public class VendingMachine {
                         snacks.setStock(currentStock - 1);
 //                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(snacks.getPrice());
 
+                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
 
                         BigDecimal discount = new BigDecimal(-1.00);
                         if (hasDiscount) {
@@ -120,7 +121,7 @@ public class VendingMachine {
 //                        BigDecimal originalBalance = snack.add(UserInput.balance.setScale(2, RoundingMode.HALF_UP));
 //                        BigDecimal newBalance = UserInput.balance.setScale(2, RoundingMode.HALF_UP);
 //    TODO:                    audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
-                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
+
 
                         break;
                     } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {

@@ -27,8 +27,6 @@ public class VendingMachine {
 
     private static List<Snack> listOfSnacks = new ArrayList<>();
     private List<Snack> listOfSnacks1 = new ArrayList<>();
-
-    private List<Snack> snacksType = new ArrayList<>();
     
 
     public void run() {
@@ -83,7 +81,7 @@ public class VendingMachine {
                         snacks.setStock(currentStock - 1);
 
 
-                        UserInput.balance = UserInput.balance.subtract( snacks.getPrice() );
+                        UserInput.balance = UserInput.balance.subtract(snacks.getPrice());
                         // $5 in, buy d4 two times leaves the user with 2.30 leftover.
                         // if discount is working correctly, there should be 2.975 leftover after purchasing two d4
 
@@ -124,39 +122,33 @@ public class VendingMachine {
 
                         // need to add an if statement for munchy munchy/drinky drinky/etc.
                         System.out.println(snacks.getName() + " Dispensed." + " Price: $" + snacks.getPrice() + " Remaining Balance: $" + UserInput.balance);
-
-                        String Munchy = "Munchy, Munchy, so Good!";
-                        String Candy = "Sugar, Sugar, so Sweet!";
-                        String Drink = "Drinky, Drinky, Slurp Slurp!";
-                        String Gum = "Chewy, Chewy, Lots O Bubbles!";
-
-
-                        if (snacks.getSnacksType() == Munchy) {
-                            System.out.println(Munchy);
-                        }
-
-                        if (snacks.getSnacksType() == Candy) {
-                            System.out.println(Candy);
-                        }
-
-                        if (snacks.getSnacksType() == Drink) {
-                            System.out.println(Drink);
-                        }
-
-                        if (snacks.getSnacksType() == Gum) {
-                            System.out.println(Gum);
-                        }
+                        System.out.println();
+                        // using abstract class method (the quo ted message is included in the subclass itself "Munchy, Munchy, so Good!"
+                        System.out.println(snacks.getMessage());
+                        System.out.println();
 
 
-//                        String moneyAdded = scanner.nextLine();
-//                        double num = Double.parseDouble(moneyAdded);
-//                        BigDecimal numMoneyAdded = BigDecimal.valueOf(num);
-//                        BigDecimal originalBalance  = numMoneyAdded;
+
+//                        if (snacks.getSnacksType().equals(Munchy)) {
+//                            System.out.println(Munchy);
+//                        }
+//
+//                        if (snacks.getSnacksType() == Candy) {
+//                            System.out.println(Candy);
+//                        }
+//
+//                        if (snacks.getSnacksType() == Drink) {
+//                            System.out.println(Drink);
+//                        }
+//
+//                        if (snacks.getSnacksType() == Gum) {
+//                            System.out.println(Gum);
+//                        }
+
+
                         BigDecimal snack = snacks.getPrice();
                         BigDecimal originalBalance = snack.add(UserInput.balance);
                         BigDecimal newBalance = UserInput.balance;
-
-
 
                         audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
 

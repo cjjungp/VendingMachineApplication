@@ -7,7 +7,6 @@ public abstract class Snack {
     private String name;
     private BigDecimal price;
     private int stock;
-    private String snacksType;
 
 
     public Snack(String slotID, String name, BigDecimal price) {
@@ -15,15 +14,9 @@ public abstract class Snack {
         this.name = name;
         this.price = price;
         this.stock = 6;
-        // new
-        this.snacksType = snacksType;
 
     }
 
-    // new
-    public String getSnacksType() {
-        return snacksType;
-    }
 
     public String getSlotID() {
         return slotID;
@@ -56,4 +49,8 @@ public abstract class Snack {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    // new
+    public abstract String getMessage ();
+
 }

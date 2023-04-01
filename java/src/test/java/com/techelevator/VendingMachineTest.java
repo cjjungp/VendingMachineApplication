@@ -17,22 +17,22 @@ public class VendingMachineTest {
 
     }
 
-
-    @Test
-    public void method_returns_correct_change() {
-        // Arrange
-        correctChange sut = new correctChange();
-
-        // Act
-        boolean value;
-        String getChange = currentBalance - itemPrice;
-        String expectedResult = getChange;
-        String actualResult = sut.;
-
-        // Assert
-        Assert.assertTrue(true);
-
-        // Assert.assertEquals
+//
+//    @Test
+//    public void method_returns_correct_change() {
+//        // Arrange
+//        correctChange sut = new correctChange();
+//
+//        // Act
+//        boolean value;
+//        String getChange = currentBalance - itemPrice;
+//        String expectedResult = getChange;
+//        String actualResult = sut.;
+//
+//        // Assert
+//        Assert.assertTrue(true);
+//
+//        // Assert.assertEquals
 
 
     // Change

@@ -6,16 +6,35 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
+import static com.techelevator.ui.UserInput.balance;
+import static org.junit.Assert.assertEquals;
+
 public class VendingMachineTest {
 
     private VendingMachine sut;
 
     @Before
-
     public void setup() {
         sut = new VendingMachine();
-
     }
+
+//    @Test
+//
+//    public void alphabetShouldReturnError() {
+//        // Arrange
+//        VendingMachine errorDetector = new VendingMachine();
+//
+//        // Act
+//        BigDecimal price = 24.00;
+//        String Gum;
+//        String name = null;
+//
+//        // Assert
+//        Assert.assertEquals(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance, 2);
+//
+//    }
 
 //
 //    @Test

@@ -121,12 +121,8 @@ public class VendingMachine {
 
 
                         // need to add an if statement for munchy munchy/drinky drinky/etc.
-                        System.out.println(snacks.getName() + " Dispensed." + " Price: $" + snacks.getPrice() + " Remaining Balance: $" + UserInput.balance);
-                        System.out.println();
-                        // using abstract class method (the quo ted message is included in the subclass itself "Munchy, Munchy, so Good!"
-                        System.out.println(snacks.getMessage());
-                        System.out.println();
-
+                        // encapsulation (look below for full description of the method ["extracted")
+                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance,snacks.getMessage());
 
 
 //                        if (snacks.getSnacksType().equals(Munchy)) {
@@ -204,6 +200,17 @@ public class VendingMachine {
                 stay = false;
             }
         } while (stay);
+    }
+
+
+    private String extracted(String name, BigDecimal price, BigDecimal balance, String message) {
+        System.out.println(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance);
+        System.out.println();
+        // using abstract class method (the quo ted message is included in the subclass itself "Munchy, Munchy, so Good!"
+        System.out.println(message);
+        System.out.println();
+
+        return name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance;
     }
 
 

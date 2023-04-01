@@ -8,6 +8,7 @@ import com.techelevator.ui.UserOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -27,15 +28,16 @@ public class VendingMachine {
     private static List<Snack> listOfSnacks = new ArrayList<>();
     private List<Snack> listOfSnacks1 = new ArrayList<>();
 
+    private List<Snack> snacksType = new ArrayList<>();
+    
 
     public void run() {
+        readFile();
         while (true) {
             UserOutput.displayHomeScreen();
             String choice = UserInput.getHomeScreenOption();
 
             if (choice.equals("display")) {
-                // Audit Entry started -- need to implement CHOSEN ITEM/ACTION, INPUT BALANCE, FINAL BALANCE
-                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + "  -User selected Display - ");
                 displayVendingItems();
                 // display the vending machine slots
             } if (choice.equals("purchase")) {
@@ -53,9 +55,6 @@ public class VendingMachine {
         boolean stay = true;
 
         do {
-//            System.out.println("----Purchase option selected----");
-                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " - User selected Purchase - ");
-//                UserOutput.displayPurchaseScreenOpening();
                 String choice = UserInput.getDisplayPurchaseOptions();
 
             if (choice.equals("feed money")) {
@@ -65,7 +64,12 @@ public class VendingMachine {
                 double num = Double.parseDouble(moneyAdded);
                 BigDecimal numMoneyAdded = BigDecimal.valueOf(num);
                 UserInput.balance = (UserInput.balance.add(numMoneyAdded));
+
+                // Used audit.write to log when money is inserted.
+                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " MONEY FED:          $" + numMoneyAdded + "   $" + UserInput.balance);
             }
+
+            // still need a discount
             if(choice.equals("select item")) {
 
                 System.out.println();
@@ -74,21 +78,135 @@ public class VendingMachine {
                 String userSelectedID = scanner.nextLine();
 
                 for (Snack snacks : listOfSnacks) {
-                    if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase())) {
-                        System.out.println(snacks.getName());
-                        UserInput.balance = UserInput.balance.subtract(snacks.getPrice());
-
-                        // update stock...
-
+                    if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() > 0 && UserInput.balance.compareTo(snacks.getPrice()) >= 0) {
                         int currentStock = snacks.getStock();
                         snacks.setStock(currentStock - 1);
-                    }
-                }
 
+
+                        UserInput.balance = UserInput.balance.subtract( snacks.getPrice() );
+                        // $5 in, buy d4 two times leaves the user with 2.30 leftover.
+                        // if discount is working correctly, there should be 2.975 leftover after purchasing two d4
+
+
+                        // -------------------------------------------------------------------
+
+                        // this works to apply a half off discount, but I can't figure out how to make it happen every other time
+                        // UserInput.balance = UserInput.balance.subtract( (snacks.getPrice().divide(divideBy2)) );
+
+
+                        // ---------------- this didn't quite work --------------------------
+
+//                        int counter = 0;
+//                        if (counter == 0) {
+//                            UserInput.balance = UserInput.balance.subtract( snacks.getPrice() );
+//                            counter = counter + 1;
+//
+//                        } else {
+//                            BigDecimal divideBy2 = new BigDecimal(2);
+//                            UserInput.balance = UserInput.balance.subtract( (snacks.getPrice().divide(divideBy2)) );
+//                        }
+
+                        // ----------------- neither did this -------------------------------
+
+//                        if (hasDiscount == true) {
+//                            BigDecimal divideBy2 = new BigDecimal(2);
+//                            UserInput.balance = UserInput.balance.subtract( (snacks.getPrice().divide(divideBy2)) );
+//
+//                            hasDiscount = false;
+//
+//                        } else if(hasDiscount == false) {
+//
+//                            UserInput.balance = UserInput.balance.subtract( snacks.getPrice() );
+//                            hasDiscount = true;
+//                        }
+                        // ------------------------------------------------------------------------
+
+
+                        // need to add an if statement for munchy munchy/drinky drinky/etc.
+                        System.out.println(snacks.getName() + " Dispensed." + " Price: $" + snacks.getPrice() + " Remaining Balance: $" + UserInput.balance);
+
+                        String Munchy = "Munchy, Munchy, so Good!";
+                        String Candy = "Sugar, Sugar, so Sweet!";
+                        String Drink = "Drinky, Drinky, Slurp Slurp!";
+                        String Gum = "Chewy, Chewy, Lots O Bubbles!";
+
+
+                        if (snacks.getSnacksType() == Munchy) {
+                            System.out.println(Munchy);
+                        }
+
+                        if (snacks.getSnacksType() == Candy) {
+                            System.out.println(Candy);
+                        }
+
+                        if (snacks.getSnacksType() == Drink) {
+                            System.out.println(Drink);
+                        }
+
+                        if (snacks.getSnacksType() == Gum) {
+                            System.out.println(Gum);
+                        }
+
+
+//                        String moneyAdded = scanner.nextLine();
+//                        double num = Double.parseDouble(moneyAdded);
+//                        BigDecimal numMoneyAdded = BigDecimal.valueOf(num);
+//                        BigDecimal originalBalance  = numMoneyAdded;
+                        BigDecimal snack = snacks.getPrice();
+                        BigDecimal originalBalance = snack.add(UserInput.balance);
+                        BigDecimal newBalance = UserInput.balance;
+
+
+
+                        audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
+
+
+                        break;
+                    } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {
+                        System.out.println("Not Enough Money");
+                    } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() == 0) {
+                        System.out.println("Out of stock.");
+                    }
+
+
+                }
             }
+
+
+
             if (choice.equals("finish transaction")){
                     System.out.println();
-                    System.out.println("Thank you. Please don't forget your change if there is any");
+                    System.out.println("Thank you. Please don't forget your change if there is any.");
+                BigDecimal zero = new BigDecimal(0);
+                BigDecimal oneDollar = new BigDecimal(1);
+                BigDecimal oneQuarter = new BigDecimal(0.25);
+                BigDecimal oneDime = new BigDecimal(0.10);
+                BigDecimal oneNickel = new BigDecimal(0.05);
+
+                int dollarCounter = 0;
+                int quarterCounter = 0;
+                int dimeCounter = 0;
+                int nickelCounter = 0;
+
+                if (UserInput.balance.compareTo(zero) > 0) {
+                    while (UserInput.balance.compareTo(oneDollar) >= 0) {
+                        dollarCounter++;
+                        UserInput.balance = UserInput.balance.subtract(oneDollar);
+                    }
+                    while (UserInput.balance.compareTo(oneQuarter) >= 0) {
+                        quarterCounter++;
+                        UserInput.balance = UserInput.balance.subtract(oneQuarter);
+                    }
+                    while (UserInput.balance.compareTo(oneDime) >= 0) {
+                        dimeCounter++;
+                        UserInput.balance = UserInput.balance.subtract(oneDime);
+                    }
+                    while (UserInput.balance.compareTo(oneNickel) >= 0) {
+                        nickelCounter++;
+                        UserInput.balance = UserInput.balance.subtract(oneNickel);
+                    }
+                }
+                System.out.println("Your Change = Dollars: " + dollarCounter + " Quarters: " + quarterCounter + " Dimes: " + dimeCounter + " Nickels: " + nickelCounter);
                 }
             if(choice.equals("q")) {
                 stay = false;
@@ -97,12 +215,11 @@ public class VendingMachine {
     }
 
 
-
     // Might be able to move this to UserOutput Class?? ...
     // ...I have not tried yet since I got it working.
     public void displayVendingItems() {
 
-        this.listOfSnacks = readFile();
+//        this.listOfSnacks = readFile();
         listOfSnacks1 = listOfSnacks;
         System.out.println();
         for (Snack snacks : listOfSnacks) {
@@ -115,16 +232,6 @@ public class VendingMachine {
             System.out.println(snacks.getSlotID() + ": " + snacks.getName() + " - $" + snacks.getPrice() + " - Stock: " + snacks.getStock());
         }
     }
-
-
-    // If you run out of stock.....
-//                    int numberOfSnacksPurchased = 0;
-//            if (snacks.getStock() == NO_LONGER_AVAILABLE) {
-//                System.out.println(NO_LONGER_AVAILABLE);
-//            } else if (numberOfSnacksPurchased > 0) {
-//                System.out.println(listOfSnacks.size() - numberOfSnacksPurchased);
-//            } else {
-
 
 
     public List readFile() {

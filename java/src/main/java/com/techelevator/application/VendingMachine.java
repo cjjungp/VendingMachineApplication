@@ -8,6 +8,7 @@ import com.techelevator.ui.UserOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -27,6 +28,8 @@ public class VendingMachine {
     private static List<Snack> listOfSnacks = new ArrayList<>();
     private List<Snack> listOfSnacks1 = new ArrayList<>();
 
+    private List<Snack> snacksType = new ArrayList<>();
+    
 
     public void run() {
         readFile();
@@ -122,12 +125,41 @@ public class VendingMachine {
                         // need to add an if statement for munchy munchy/drinky drinky/etc.
                         System.out.println(snacks.getName() + " Dispensed." + " Price: $" + snacks.getPrice() + " Remaining Balance: $" + UserInput.balance);
 
+                        String Munchy = "Munchy, Munchy, so Good!";
+                        String Candy = "Sugar, Sugar, so Sweet!";
+                        String Drink = "Drinky, Drinky, Slurp Slurp!";
+                        String Gum = "Chewy, Chewy, Lots O Bubbles!";
 
-//                        String IDchosen = snacks.getSlotID();
-//                        audit.write(dateTimeFormatter.format(LocalDateTime.now()) + snacks.getName() + "          $" + IDchosen + "   $" + UserInput.balance);
+
+                        if (snacks.getSnacksType() == Munchy) {
+                            System.out.println(Munchy);
+                        }
+
+                        if (snacks.getSnacksType() == Candy) {
+                            System.out.println(Candy);
+                        }
+
+                        if (snacks.getSnacksType() == Drink) {
+                            System.out.println(Drink);
+                        }
+
+                        if (snacks.getSnacksType() == Gum) {
+                            System.out.println(Gum);
+                        }
 
 
-                        // need to include audit somewhere in here
+//                        String moneyAdded = scanner.nextLine();
+//                        double num = Double.parseDouble(moneyAdded);
+//                        BigDecimal numMoneyAdded = BigDecimal.valueOf(num);
+//                        BigDecimal originalBalance  = numMoneyAdded;
+                        BigDecimal snack = snacks.getPrice();
+                        BigDecimal originalBalance = snack.add(UserInput.balance);
+                        BigDecimal newBalance = UserInput.balance;
+
+
+
+                        audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
+
 
                         break;
                     } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {
@@ -135,8 +167,13 @@ public class VendingMachine {
                     } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() == 0) {
                         System.out.println("Out of stock.");
                     }
+
+
                 }
             }
+
+
+
             if (choice.equals("finish transaction")){
                     System.out.println();
                     System.out.println("Thank you. Please don't forget your change if there is any.");

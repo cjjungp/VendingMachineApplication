@@ -14,6 +14,7 @@ public class UserInput
     private static Scanner scanner = new Scanner(System.in);
     public static BigDecimal balance = BigDecimal.ZERO;
 
+
     public BigDecimal getBalance(){
         return balance;
     }
@@ -94,5 +95,8 @@ public class UserInput
         return null;
     }
     }
+
+
+
 
 }

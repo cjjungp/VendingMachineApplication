@@ -8,6 +8,8 @@ import com.techelevator.ui.UserOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -51,20 +53,25 @@ public class VendingMachine {
     public void handlePurchaseMenuOptions() {
 
         boolean stay = true;
+        boolean hasDiscount = false;
 
         do {
+
                 String choice = UserInput.getDisplayPurchaseOptions();
 
             if (choice.equals("feed money")) {
                 System.out.println("Please insert money in whole amount ($1, $5, $10, or $20)");
-                System.out.println("Current Money Provided: " + UserInput.balance);
+                System.out.println("Current Money Provided: " + UserInput.balance.setScale(2, RoundingMode.HALF_UP));
                 String moneyAdded = scanner.nextLine();
                 double num = Double.parseDouble(moneyAdded);
                 BigDecimal numMoneyAdded = BigDecimal.valueOf(num);
-                UserInput.balance = (UserInput.balance.add(numMoneyAdded));
+                UserInput.balance = (UserInput.balance.setScale(2, RoundingMode.HALF_UP).add(numMoneyAdded.setScale(2, RoundingMode.HALF_UP)));
 
                 // Used audit.write to log when money is inserted.
-                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " MONEY FED:          $" + numMoneyAdded + "   $" + UserInput.balance);
+                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " MONEY FED:          $" + numMoneyAdded.setScale(2,RoundingMode.HALF_UP) + "   $" + UserInput.balance.setScale(2, RoundingMode.HALF_UP));
+//
+//                String test = dateTimeFormatter.format(LocalDateTime.now());
+//                audit.write(String.format("T"));
             }
 
             // still need a discount
@@ -75,92 +82,54 @@ public class VendingMachine {
                 displayVendingItems1();
                 String userSelectedID = scanner.nextLine();
 
+
+
+
+
+
                 for (Snack snacks : listOfSnacks) {
-                    if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() > 0 && UserInput.balance.compareTo(snacks.getPrice()) >= 0) {
-                        int currentStock = snacks.getStock();
-                        snacks.setStock(currentStock - 1);
+                    if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() > 0 && UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(snacks.getPrice()) >= 0) {
 
 
-                        UserInput.balance = UserInput.balance.subtract(snacks.getPrice());
-                        // $5 in, buy d4 two times leaves the user with 2.30 leftover.
-                        // if discount is working correctly, there should be 2.975 leftover after purchasing two d4
 
-
-                        // -------------------------------------------------------------------
-
-                        // this works to apply a half off discount, but I can't figure out how to make it happen every other time
-                        // UserInput.balance = UserInput.balance.subtract( (snacks.getPrice().divide(divideBy2)) );
-
-
-                        // ---------------- this didn't quite work --------------------------
-
-//                        int counter = 0;
-//                        if (counter == 0) {
-//                            UserInput.balance = UserInput.balance.subtract( snacks.getPrice() );
-//                            counter = counter + 1;
-//
-//                        } else {
-//                            BigDecimal divideBy2 = new BigDecimal(2);
-//                            UserInput.balance = UserInput.balance.subtract( (snacks.getPrice().divide(divideBy2)) );
-//                        }
-
-                        // ----------------- neither did this -------------------------------
-
-//                        if (hasDiscount == true) {
-//                            BigDecimal divideBy2 = new BigDecimal(2);
-//                            UserInput.balance = UserInput.balance.subtract( (snacks.getPrice().divide(divideBy2)) );
-//
-//                            hasDiscount = false;
-//
-//                        } else if(hasDiscount == false) {
-//
-//                            UserInput.balance = UserInput.balance.subtract( snacks.getPrice() );
-//                            hasDiscount = true;
-//                        }
-                        // ------------------------------------------------------------------------
 
 
                         // need to add an if statement for munchy munchy/drinky drinky/etc.
                         // encapsulation (look below for full description of the method ["extracted")
-                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance,snacks.getMessage());
+                        int currentStock = snacks.getStock();
+                        snacks.setStock(currentStock - 1);
+//                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(snacks.getPrice());
 
 
-//                        if (snacks.getSnacksType().equals(Munchy)) {
-//                            System.out.println(Munchy);
-//                        }
-//
-//                        if (snacks.getSnacksType() == Candy) {
-//                            System.out.println(Candy);
-//                        }
-//
-//                        if (snacks.getSnacksType() == Drink) {
-//                            System.out.println(Drink);
-//                        }
-//
-//                        if (snacks.getSnacksType() == Gum) {
-//                            System.out.println(Gum);
-//                        }
+                        BigDecimal discount = new BigDecimal(-1.00);
+                        if (hasDiscount) {
 
+//                            snacks.setPrice(snacks.getPrice().add(discount));
+                            BigDecimal currentSnackPrice = snacks.getPrice();
+                            BigDecimal adjustedSnackPrice = currentSnackPrice.add(discount);
+                            UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(adjustedSnackPrice);
+
+                            hasDiscount = false;
+                        } else if (!hasDiscount) {
+                            BigDecimal currentSnackPrice = snacks.getPrice();
+                            UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(currentSnackPrice);
+                            hasDiscount = true;
+                        }
 
                         BigDecimal snack = snacks.getPrice();
-                        BigDecimal originalBalance = snack.add(UserInput.balance);
-                        BigDecimal newBalance = UserInput.balance;
-
-                        audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
-
+//                        BigDecimal originalBalance = snack.add(UserInput.balance.setScale(2, RoundingMode.HALF_UP));
+//                        BigDecimal newBalance = UserInput.balance.setScale(2, RoundingMode.HALF_UP);
+//    TODO:                    audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
+                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
 
                         break;
-                    } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {
+                    } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {
                         System.out.println("Not Enough Money");
                     } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() == 0) {
-                        System.out.println("Out of stock.");
+                        System.out.println("NO LONGER AVAILABLE");
                     }
-
-
                 }
             }
-
-
 
             if (choice.equals("finish transaction")){
                     System.out.println();
@@ -170,32 +139,34 @@ public class VendingMachine {
                 BigDecimal oneQuarter = new BigDecimal(0.25);
                 BigDecimal oneDime = new BigDecimal(0.10);
                 BigDecimal oneNickel = new BigDecimal(0.05);
+                BigDecimal originalBalance = UserInput.balance.setScale(2, RoundingMode.HALF_UP);
 
                 int dollarCounter = 0;
                 int quarterCounter = 0;
                 int dimeCounter = 0;
                 int nickelCounter = 0;
 
-                if (UserInput.balance.compareTo(zero) > 0) {
-                    while (UserInput.balance.compareTo(oneDollar) >= 0) {
+                if (UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(zero) > 0) {
+                    while (UserInput.balance.setScale(2).compareTo(oneDollar) >= 0) {
                         dollarCounter++;
-                        UserInput.balance = UserInput.balance.subtract(oneDollar);
+                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(oneDollar.setScale(2, RoundingMode.HALF_UP));
                     }
-                    while (UserInput.balance.compareTo(oneQuarter) >= 0) {
+                    while (UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(oneQuarter.setScale(2, RoundingMode.HALF_UP)) >= 0) {
                         quarterCounter++;
-                        UserInput.balance = UserInput.balance.subtract(oneQuarter);
+                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(oneQuarter.setScale(2, RoundingMode.HALF_UP));
                     }
-                    while (UserInput.balance.compareTo(oneDime) >= 0) {
+                    while (UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(oneDime.setScale(2, RoundingMode.HALF_UP)) >= 0) {
                         dimeCounter++;
-                        UserInput.balance = UserInput.balance.subtract(oneDime);
+                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(oneDime.setScale(2, RoundingMode.HALF_UP));
                     }
-                    while (UserInput.balance.compareTo(oneNickel) >= 0) {
+                    while (UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(oneNickel.setScale(2, RoundingMode.HALF_UP)) >= 0) {
                         nickelCounter++;
-                        UserInput.balance = UserInput.balance.subtract(oneNickel);
+                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(oneNickel.setScale(2, RoundingMode.HALF_UP));
                     }
                 }
                 System.out.println("Your Change = Dollars: " + dollarCounter + " Quarters: " + quarterCounter + " Dimes: " + dimeCounter + " Nickels: " + nickelCounter);
-                }
+                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " CHANGE GIVEN: " + originalBalance + " " + UserInput.balance);
+            }
             if(choice.equals("q")) {
                 stay = false;
             }
@@ -203,7 +174,7 @@ public class VendingMachine {
     }
 
 
-    private String extracted(String name, BigDecimal price, BigDecimal balance, String message) {
+    public String extracted(String name, BigDecimal price, BigDecimal balance, String message) {
         System.out.println(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance);
         System.out.println();
         // using abstract class method (the quo ted message is included in the subclass itself "Munchy, Munchy, so Good!"

@@ -20,21 +20,27 @@ public class VendingMachineTest {
         sut = new VendingMachine();
     }
 
-//    @Test
-//
-//    public void alphabetShouldReturnError() {
-//        // Arrange
+    @Test
+
+    public void alphabetShouldReturnError() {
+        // Arrange
 //        VendingMachine errorDetector = new VendingMachine();
-//
-//        // Act
-//        BigDecimal price = 24.00;
-//        String Gum;
-//        String name = null;
-//
-//        // Assert
-//        Assert.assertEquals(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance, 2);
-//
-//    }
+
+        //private String extracted(String name, BigDecimal price, BigDecimal balance, String message)
+
+        // Act
+        String name = "Paper Towels";
+        BigDecimal price =  new BigDecimal("2.50");
+        BigDecimal balance = new BigDecimal("0.00");
+        String message = "hey";
+
+        String actual = sut.extracted(name, price, balance, message);
+        String expected = "";
+
+        // Assert
+        // Assert.assertEquals(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance, 2);
+        Assert.assertEquals(actual, expected);
+    }
 
 //
 //    @Test

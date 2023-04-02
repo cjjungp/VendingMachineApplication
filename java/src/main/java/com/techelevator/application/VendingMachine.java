@@ -14,7 +14,7 @@ import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+import java.util.logging.Logger;
 
 
 public class VendingMachine {
@@ -68,8 +68,8 @@ public class VendingMachine {
                 UserInput.balance = (UserInput.balance.setScale(2, RoundingMode.HALF_UP).add(numMoneyAdded.setScale(2, RoundingMode.HALF_UP)));
 
                 // Used audit.write to log when money is inserted.
-                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " MONEY FED:          $" + numMoneyAdded.setScale(2,RoundingMode.HALF_UP) + "   $" + UserInput.balance.setScale(2, RoundingMode.HALF_UP));
-//
+//                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " MONEY FED:           $" + numMoneyAdded.setScale(2,RoundingMode.HALF_UP) + " $" + UserInput.balance.setScale(2, RoundingMode.HALF_UP));
+                audit.write(String.format( "%s %-20s $%s  $%-5s", dateTimeFormatter.format(LocalDateTime.now()), "MONEY FED: ", numMoneyAdded.setScale(2, RoundingMode.HALF_UP), UserInput.balance));
 //                String test = dateTimeFormatter.format(LocalDateTime.now());
 //                audit.write(String.format("T"));
             }
@@ -82,17 +82,12 @@ public class VendingMachine {
                 displayVendingItems1();
                 String userSelectedID = scanner.nextLine();
 
-
-
-
-
-
                 for (Snack snacks : listOfSnacks) {
                     if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && snacks.getStock() > 0 && UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(snacks.getPrice()) >= 0) {
 
 
 
-
+                        BigDecimal oldBalance = UserInput.balance;
 
                         // need to add an if statement for munchy munchy/drinky drinky/etc.
                         // encapsulation (look below for full description of the method ["extracted")
@@ -100,7 +95,7 @@ public class VendingMachine {
                         snacks.setStock(currentStock - 1);
 //                        UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(snacks.getPrice());
 
-                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
+//                        extracted(snacks.getName(),snacks.getPrice(),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
 
                         BigDecimal discount = new BigDecimal(-1.00);
                         if (hasDiscount) {
@@ -109,19 +104,17 @@ public class VendingMachine {
                             BigDecimal currentSnackPrice = snacks.getPrice();
                             BigDecimal adjustedSnackPrice = currentSnackPrice.add(discount);
                             UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(adjustedSnackPrice);
+                            extracted(snacks.getName(),snacks.getPrice().add(discount),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
 
                             hasDiscount = false;
                         } else if (!hasDiscount) {
                             BigDecimal currentSnackPrice = snacks.getPrice();
                             UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(currentSnackPrice);
+                            extracted(snacks.getName(),snacks.getPrice(),UserInput.balance.setScale(2, RoundingMode.HALF_UP),snacks.getMessage());
                             hasDiscount = true;
                         }
 
-                        BigDecimal snack = snacks.getPrice();
-//                        BigDecimal originalBalance = snack.add(UserInput.balance.setScale(2, RoundingMode.HALF_UP));
-//                        BigDecimal newBalance = UserInput.balance.setScale(2, RoundingMode.HALF_UP);
-//    TODO:                    audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " " + snacks.getName() + " " + snacks.getSlotID() + "         $" + originalBalance + "   $" + newBalance);
-
+                        audit.write(String.format( "%s %-17s %s $%-5s $%-5s", dateTimeFormatter.format(LocalDateTime.now()), snacks.getName(), snacks.getSlotID(), oldBalance, UserInput.balance   ));
 
                         break;
                     } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {
@@ -165,15 +158,17 @@ public class VendingMachine {
                         UserInput.balance = UserInput.balance.setScale(2, RoundingMode.HALF_UP).subtract(oneNickel.setScale(2, RoundingMode.HALF_UP));
                     }
                 }
-                System.out.println("Your Change = Dollars: " + dollarCounter + " Quarters: " + quarterCounter + " Dimes: " + dimeCounter + " Nickels: " + nickelCounter);
-                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " CHANGE GIVEN: " + originalBalance + " " + UserInput.balance);
+                System.out.println("Your Change = Dollars: " + dollarCounter + ", Quarters: " + quarterCounter + ", Dimes: " + dimeCounter + ", Nickels: " + nickelCounter);
+//                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " CHANGE GIVEN: " + originalBalance + " " + UserInput.balance);
+                String changeGiven = "CHANGE GIVEN: ";
+
+                audit.write(String.format( "%s %-20s $%s  $%s ", dateTimeFormatter.format(LocalDateTime.now()), changeGiven, originalBalance, UserInput.balance));
             }
             if(choice.equals("q")) {
                 stay = false;
             }
         } while (stay);
     }
-
 
     public String extracted(String name, BigDecimal price, BigDecimal balance, String message) {
         System.out.println(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance);

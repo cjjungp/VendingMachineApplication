@@ -26,7 +26,7 @@ public class Audit implements Closeable {
 
     public void write(String message) {
         //can change this to printf to make perfect formatting
-        this.writer.printf(message);
+        this.writer.println(message);
         this.writer.flush();
     }
 

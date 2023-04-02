@@ -22,25 +22,30 @@ public class VendingMachineTest {
 
     @Test
 
-    public void alphabetShouldReturnError() {
+    public void Chiclets5DollarsCorrectChange() {
         // Arrange
-//        VendingMachine errorDetector = new VendingMachine();
+        // Since you already have "private VendingMachine sut;" you don't need the codes below
+        // VendingMachine errorDetector = new VendingMachine();
 
         //private String extracted(String name, BigDecimal price, BigDecimal balance, String message)
 
         // Act
-        String name = "Paper Towels";
-        BigDecimal price =  new BigDecimal("2.50");
-        BigDecimal balance = new BigDecimal("0.00");
-        String message = "hey";
+        String name = "Chiclets";
+        BigDecimal price =  new BigDecimal("1.35");
+        BigDecimal balance = new BigDecimal("3.65");
+        String message = "Chewy, Chewy, Lots O Bubbles!";
 
         String actual = sut.extracted(name, price, balance, message);
-        String expected = "";
+        String expected = name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance;
 
         // Assert
         // Assert.assertEquals(name + " Dispensed." + " Price: $" + price + " Remaining Balance: $" + balance, 2);
-        Assert.assertEquals(actual, expected);
+        Assert.assertEquals(expected, actual);
     }
+
+
+
+
 
 //
 //    @Test

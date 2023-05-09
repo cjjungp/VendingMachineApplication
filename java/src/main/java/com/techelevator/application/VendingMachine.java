@@ -1,6 +1,6 @@
 package com.techelevator.application;
 
-import com.techelevator.logger.Audit;
+import com.techelevator.logger.Logger;
 import com.techelevator.models.*;
 import com.techelevator.ui.UserInput;
 import com.techelevator.ui.UserOutput;
@@ -8,28 +8,23 @@ import com.techelevator.ui.UserOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Logger;
 
 
 public class VendingMachine {
     private Scanner scanner = new Scanner(System.in);
     private UserInput input = new UserInput();
     private UserOutput output = new UserOutput();
-    private Audit audit = new Audit("Audit.txt");
+    private Logger logger = new Logger("Audit.txt");
     // Audit Entry
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
     // No Items left
     private int NO_LONGER_AVAILABLE = 0;
-
     private static List<Snack> listOfSnacks = new ArrayList<>();
-    private List<Snack> listOfSnacks1 = new ArrayList<>();
-    
+
 
     public void run() {
         readFile();
@@ -50,7 +45,7 @@ public class VendingMachine {
             }
         }
     }
-    public void handlePurchaseMenuOptions() {
+    private void handlePurchaseMenuOptions() {
 
         boolean stay = true;
         boolean hasDiscount = false;
@@ -69,7 +64,7 @@ public class VendingMachine {
 
                 // Used audit.write to log when money is inserted.
 //                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " MONEY FED:           $" + numMoneyAdded.setScale(2,RoundingMode.HALF_UP) + " $" + UserInput.balance.setScale(2, RoundingMode.HALF_UP));
-                audit.write(String.format( "%s %-20s $%s  $%-5s", dateTimeFormatter.format(LocalDateTime.now()), "MONEY FED: ", numMoneyAdded.setScale(2, RoundingMode.HALF_UP), UserInput.balance));
+                logger.write(String.format( "%s %-20s $%s  $%-5s", dateTimeFormatter.format(LocalDateTime.now()), "MONEY FED: ", numMoneyAdded.setScale(2, RoundingMode.HALF_UP), UserInput.balance));
 //                String test = dateTimeFormatter.format(LocalDateTime.now());
 //                audit.write(String.format("T"));
             }
@@ -114,7 +109,7 @@ public class VendingMachine {
                             hasDiscount = true;
                         }
 
-                        audit.write(String.format( "%s %-17s %s $%-5s $%-5s", dateTimeFormatter.format(LocalDateTime.now()), snacks.getName(), snacks.getSlotID(), oldBalance, UserInput.balance   ));
+                        logger.write(String.format( "%s %-17s %s $%-5s $%-5s", dateTimeFormatter.format(LocalDateTime.now()), snacks.getName(), snacks.getSlotID(), oldBalance, UserInput.balance   ));
 
                         break;
                     } if (snacks.getSlotID().toLowerCase().equals(userSelectedID.toLowerCase()) && UserInput.balance.setScale(2, RoundingMode.HALF_UP).compareTo(snacks.getPrice()) <= 0 && snacks.getStock() > 0) {
@@ -162,7 +157,7 @@ public class VendingMachine {
 //                audit.write(dateTimeFormatter.format(LocalDateTime.now()) + " CHANGE GIVEN: " + originalBalance + " " + UserInput.balance);
                 String changeGiven = "CHANGE GIVEN: ";
 
-                audit.write(String.format( "%s %-20s $%s  $%s ", dateTimeFormatter.format(LocalDateTime.now()), changeGiven, originalBalance, UserInput.balance));
+                logger.write(String.format( "%s %-20s $%s  $%s ", dateTimeFormatter.format(LocalDateTime.now()), changeGiven, originalBalance, UserInput.balance));
             }
             if(choice.equals("q")) {
                 stay = false;
@@ -183,27 +178,25 @@ public class VendingMachine {
 
     // Might be able to move this to UserOutput Class?? ...
     // ...I have not tried yet since I got it working.
-    public void displayVendingItems() {
+    private void displayVendingItems() {
 
-//        this.listOfSnacks = readFile();
-        listOfSnacks1 = listOfSnacks;
         System.out.println();
         for (Snack snacks : listOfSnacks) {
             System.out.println(snacks.getSlotID() + ": " + snacks.getName() + " - $" + snacks.getPrice() + " - Stock: " + snacks.getStock());
         }
     }
 
-    public void displayVendingItems1() {
+    private void displayVendingItems1() {
         for (Snack snacks : listOfSnacks) {
             System.out.println(snacks.getSlotID() + ": " + snacks.getName() + " - $" + snacks.getPrice() + " - Stock: " + snacks.getStock());
         }
     }
 
 
-    public List readFile() {
+    private List readFile() {
 
 //        List<Snack> listOfSnacks = new ArrayList<>();
-        File file = new File("catering.csv");
+        File file = new File("catering1.csv");
 
         if (!file.exists()) {
             System.out.println("Error reading file - program exiting!");

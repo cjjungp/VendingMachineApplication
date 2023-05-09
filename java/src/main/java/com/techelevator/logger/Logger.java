@@ -2,12 +2,12 @@ package com.techelevator.logger;
 
 import java.io.*;
 
-public class Audit implements Closeable {
+public class Logger implements Closeable {
 
     private File auditFile;
     private PrintWriter writer;
 
-    public Audit(String pathName) {
+    public Logger(String pathName) {
         this.auditFile = new File(pathName);
         if (this.auditFile.exists()){
             try {
